@@ -1,16 +1,26 @@
-export const App = () => {
-  return (
+import React from "react";
+import css from "./App.module.css"
+
+import { SearchBar } from "./Searchbar/Searchbar";
+import { ImageGallery } from "./ImageGallery/ImageGallery";
+
+export class App extends React.Component {
+  state = {
+    searchData: '',
+  }
+
+  handleSubmit = (data) => {
+    this.setState({searchData: data.searchImage})
+  }
+
+  render() {
+    return (
     <div
-      style={{
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: 40,
-        color: '#010101'
-      }}
-    >
-      React homework template
+      className={css.App}>
+        <SearchBar onSubmit={this.handleSubmit} />
+        <ImageGallery searchImg={this.state.searchData} />
     </div>
   );
+  }
+  
 };
