@@ -1,5 +1,7 @@
 import React from "react";
 import PropTypes from 'prop-types';
+import { Dna } from "react-loader-spinner";
+
 
 import css from './ImageGallery.module.css';
 import { ImageGalleryItem } from "components/ImageGalleryItem/ImageGalleryItem";
@@ -20,29 +22,29 @@ export class ImageGallery extends React.Component {
     if (prevSearchImg !== newSearchImg) {
       this.setState({ status: 'paginated', page: 1 })
       const API = `https://pixabay.com/api/?q=${this.props.searchImg}&page=${this.state.page}&key=30987365-3fb5ba0bc2c11b9a856e6023e&image_type=photo&orientation=horizontal&per_page=12`;
-      fetch(API)
+      setTimeout(fetch(API)
         .then(response => {
           if (!response.ok) {
-            return Promise.reject(new Error(`Картинки на тему "${newSearchImg}" не знайдено`))
+            return Promise.reject(new Error(`картинки на тему "${newSearchImg}" не знайдено`))
           }
           return response.json();
         })
         .then((response) => {
           if (response.hits.length === 0) {
             this.setState({status: 'rejected'})
-            return Promise.reject(new Error(`Картинки на тему "${newSearchImg}" не знайдено`))
+            return Promise.reject(new Error(`картинки на тему "${newSearchImg}" не знайдено`))
           }
 
           this.setState({ foundImg: response.hits, status: 'resolved' })
         })
     
         .catch(error => this.setState({error: error.message, status: 'rejected'}))
-    }
+    , 2000)}
 
     if (prevSearchImg === newSearchImg && prevState.page !== this.state.page) {
       this.setState({ status: 'paginated'})
       const API = `https://pixabay.com/api/?q=${this.props.searchImg}&page=${this.state.page}&key=30987365-3fb5ba0bc2c11b9a856e6023e&image_type=photo&orientation=horizontal&per_page=12`;
-      fetch(API)
+      setTimeout(fetch(API)
         .then(response => {
           if (!response.ok) {
             return Promise.reject(new Error(`Картинки на тему "${newSearchImg}" не знайдено`))
@@ -59,7 +61,7 @@ export class ImageGallery extends React.Component {
         })
     
         .catch(error => this.setState({error: error.message, status: 'rejected'}))
-    }
+    , 2000)}
   }
 
   downloadMoreImages = () => {
@@ -78,7 +80,15 @@ export class ImageGallery extends React.Component {
     }
 
     if (status === 'paginated') {
-      return <h2>Завантаження триває...</h2>
+      return(
+      <Dna
+        visible={true}
+        height="80"
+        width="80"
+        ariaLabel="dna-loading"
+        wrapperStyle={{}}
+        wrapperClass="dna-wrapper"
+      />)
     }
 
     if (status === 'rejected') {
@@ -90,7 +100,7 @@ export class ImageGallery extends React.Component {
         <>
           <ul className={css.ImageGallery}>
           {foundImg && foundImg.map(item => {
-            return <ImageGalleryItem key={item.id} webformatURL={item.webformatURL} largeImageURL={item.largeImageURL} />
+            return <ImageGalleryItem key={item.id} webformatURL={item.webformatURL} largeImageURL={item.largeImageURL}/>
           })}
           </ul>
           <Button func={this.downloadMoreImages} />
