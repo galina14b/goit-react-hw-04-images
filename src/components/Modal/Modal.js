@@ -1,5 +1,6 @@
 import React from "react";
 import css from './Modal.module.css';
+import PropTypes from 'prop-types';
 
 
 export class Modal extends React.Component {
@@ -38,4 +39,9 @@ export class Modal extends React.Component {
       </div>
     )
   }
+}
+
+Modal.propTypes = {
+  largeImageURL: PropTypes.string,
+  onToggle: PropTypes.func,
 }

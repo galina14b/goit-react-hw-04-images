@@ -1,5 +1,7 @@
 import React from "react";
 import css from './ImageGalleryItem.module.css';
+import PropTypes from 'prop-types';
+
 
 import { Modal } from "components/Modal/Modal";
 
@@ -29,7 +31,11 @@ export class ImageGalleryItem extends React.Component {
         </li>
         {this.state.showModal && <Modal largeImageURL={this.state.largeImageURL} onToggle={this.toggleModal} />}
       </>
-
-  )
+    )
   }
+}
+
+ImageGalleryItem.propTypes = {
+  webformatURL: PropTypes.string,
+  largeImageURL: PropTypes.string,
 }
