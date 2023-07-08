@@ -57,14 +57,15 @@ export class ImageGallery extends React.Component {
             return Promise.reject(new Error(`Картинки на тему "${newSearchImg}" не знайдено`))
           }
 
-          this.setState({ foundImg: response.hits, status: 'resolved' })
+          this.setState(prevState => ({ foundImg: [ ...prevState.foundImg, ...response.hits], status: 'resolved' }))
         })
     
         .catch(error => this.setState({error: error.message, status: 'rejected'}))
     , 2000)}
   }
 
-  downloadMoreImages = () => {
+  downloadMoreImages = (e) => {
+    e.preventDefault();
     this.setState(prevState => {
       return {
         page: prevState.page + 1,
