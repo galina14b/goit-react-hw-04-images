@@ -11,10 +11,15 @@ export class ImageGallery extends React.Component {
   state = {
     foundImg: '',
     func: null,
+    disabled: null,
   }
 
   componentDidMount() {
-    this.setState({foundImg: this.props.foundImg, func: this.props.btnFunction})
+    this.setState({
+      foundImg: this.props.foundImg,
+      func: this.props.btnFunction,
+      disabled: this.props.disabled,
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -32,7 +37,7 @@ export class ImageGallery extends React.Component {
             return <ImageGalleryItem key={item.id} webformatURL={item.webformatURL} largeImageURL={item.largeImageURL}/>
           })}
           </ul>
-          <Button func={this.state.func} />
+          <Button func={this.state.func} disabled={this.state.disabled} />
         </>
       )
     // }
@@ -42,4 +47,6 @@ export class ImageGallery extends React.Component {
 ImageGallery.propTypes = {
   searchImg: PropTypes.arrayOf(PropTypes.object),
   func: PropTypes.func,
+  disabled: PropTypes.bool,
+
 }

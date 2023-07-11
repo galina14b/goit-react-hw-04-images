@@ -14,13 +14,19 @@ export class App extends React.Component {
     page: 1,
     status: 'idle',
     error: null,
+    finished: false,
   }
 
   componentDidUpdate(prevProps, prevState) {
     const prevSearchImg = prevState.searchImg;
     const newSearchImg = this.state.searchImg;
     if (prevSearchImg !== newSearchImg) {
-      this.setState({ status: 'paginated', page: 1 })
+      this.setState({
+        foundImg: null,
+        status: 'paginated',
+        page: 1,
+        finished: false
+      })
       const API = `https://pixabay.com/api/?q=${newSearchImg}&page=${this.state.page}&key=30987365-3fb5ba0bc2c11b9a856e6023e&image_type=photo&orientation=horizontal&per_page=12`;
       setTimeout(fetch(API)
         .then(response => {
@@ -34,7 +40,6 @@ export class App extends React.Component {
             this.setState({status: 'rejected'})
             return Promise.reject(new Error(`картинки на тему "${newSearchImg}" не знайдено`))
           }
-
           this.setState({ foundImg: response.hits, status: 'resolved' })
         })
     
@@ -57,7 +62,11 @@ export class App extends React.Component {
             return Promise.reject(new Error(`Картинки на тему "${newSearchImg}" не знайдено`))
           }
 
+          if ((response.totalHits - 12) <= this.state.foundImg.length) {
+            this.setState({ finished: true })
+          }
           this.setState(prevState => ({ foundImg: [ ...prevState.foundImg, ...response.hits], status: 'resolved' }))
+          
         })
     
         .catch(error => this.setState({error: error.message, status: 'rejected'}))
@@ -124,7 +133,7 @@ export class App extends React.Component {
           <div className={css.App}>
             <SearchBar onSubmit={this.handleSubmit} />
           
-            <ImageGallery foundImg={foundImg} btnFunction={this.downloadMoreImages} />
+            <ImageGallery foundImg={foundImg} btnFunction={this.downloadMoreImages} disabled={this.state.finished} />
         </div>
       )
     }

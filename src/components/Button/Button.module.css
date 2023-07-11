@@ -23,3 +23,8 @@
 .Button:focus {
   background-color: #303f9f;
 }
+
+.Button:disabled {
+  opacity: 50%;
+  cursor: none;
+}
