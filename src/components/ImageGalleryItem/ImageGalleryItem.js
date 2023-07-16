@@ -1,41 +1,31 @@
 import React from "react";
 import css from './ImageGalleryItem.module.css';
-import PropTypes from 'prop-types';
 
-
+import { useContextArea } from './../Context/Context';
 import { Modal } from "components/Modal/Modal";
 
-export class ImageGalleryItem extends React.Component {
-  state = {
-    webformatURL: null,
-    largeImageURL: null,
-    showModal: false,
-  };
 
-  componentDidMount() {
-    this.setState({
-      webformatURL: this.props.webformatURL,
-      largeImageURL: this.props.largeImageURL
-    })
-  }
+export const ImageGalleryItem = () => {
 
-  toggleModal = () => {
-    this.setState({showModal: !this.state.showModal})
+  const context = useContextArea();
+
+  const { showModal, addShowModal, foundImg, largeImageURL, addLargeImageURL } = context;
+  
+  const toggleModal = () => {
+    addShowModal(!showModal);
   }
   
-  render() {
-    return (
-      <>
-        <li className={css.ImageGalleryItem} onClick={this.toggleModal}>
-          <img className={css["ImageGalleryItem-image"]} src={this.state.webformatURL} alt="" />
-        </li>
-        {this.state.showModal && <Modal largeImageURL={this.state.largeImageURL} onToggle={this.toggleModal} />}
-      </>
+  return (
+    foundImg.map(item => {
+      return (
+        <>
+      <li key={item.id} className={css.ImageGalleryItem} onClick={toggleModal}>
+        <img className={css["ImageGalleryItem-image"]} src={item.webformatURL} alt="" />
+      </li>
+      {showModal && <Modal />}
+    </>
     )
-  }
+    })
+  )
 }
 
-ImageGalleryItem.propTypes = {
-  webformatURL: PropTypes.string,
-  largeImageURL: PropTypes.string,
-}

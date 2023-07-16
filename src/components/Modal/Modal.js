@@ -1,47 +1,47 @@
 import React from "react";
 import css from './Modal.module.css';
-import PropTypes from 'prop-types';
+import { useEffect } from "react";
+
+import { useContextArea } from './../Context/Context';
 
 
-export class Modal extends React.Component {
 
-  state = {
-    largeImageURL: null
+export const Modal = () => {
+
+  const context = useContextArea();
+  const { largeImageURL, showModal, addShowModal } = context;
+
+  const toggleModal = () => {
+    addShowModal(!showModal);
   }
 
-  componentDidMount() {
-    this.setState({ largeImageURL: this.props.largeImageURL });
-    window.addEventListener('keydown', this.handleKeyDown)
-  }
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
 
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.handleKeyDown)
-  }
-
-  handleKeyDown = (event) => {
-    if (event.code === "Escape") {
-      this.props.onToggle()
-    }
-  }
-
-  handleClickOnOverlay = (event) => {
-    if (event.currentTarget === event.target) {
-      this.props.onToggle()
-    }
-  }
-
-  render() {
     return (
-      <div className={css.Overlay} onClick={this.handleClickOnOverlay}>
-        <div className={css.Modal}>
-          <img src={this.state.largeImageURL} alt="" />
-        </div>
-      </div>
+      window.removeEventListener('keydown', handleKeyDown)
     )
-  }
-}
+  }, [])
 
-Modal.propTypes = {
-  largeImageURL: PropTypes.string,
-  onToggle: PropTypes.func,
+  const handleKeyDown = (event) => {
+    console.log(event.code)
+    if (event.code === "Escape") {
+      toggleModal();
+    }
+  }
+
+  const handleClickOnOverlay = (event) => {
+    if (event.currentTarget === event.target) {
+      toggleModal();
+    }
+  }
+
+  
+  return (
+    <div className={css.Overlay} onClick={handleClickOnOverlay}>
+      <div className={css.Modal}>
+        <img src={largeImageURL} alt="" />
+      </div>
+    </div>
+  )
 }

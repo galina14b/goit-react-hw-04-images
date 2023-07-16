@@ -1,101 +1,85 @@
 import React from "react";
 import css from "./App.module.css"
 import { Dna } from "react-loader-spinner";
-import PropTypes from 'prop-types';
+import { useEffect } from "react";
 
-
+import { useContextArea } from './Context/Context';
 import { SearchBar } from "./Searchbar/Searchbar";
 import { ImageGallery } from "./ImageGallery/ImageGallery";
 
-export class App extends React.Component {
-  state = {
-    searchImg: ' ',
-    foundImg: null,
-    page: 1,
-    status: 'idle',
-    error: null,
-    finished: false,
-  }
+export const App = () => {
 
-  componentDidUpdate(prevProps, prevState) {
-    const prevSearchImg = prevState.searchImg;
-    const newSearchImg = this.state.searchImg;
-    if (prevSearchImg !== newSearchImg) {
-      this.setState({
-        foundImg: null,
-        status: 'paginated',
-        page: 1,
-        finished: false
+  const context = useContextArea();
+  
+  const {searchImg, foundImg, addFoundImg, status, addStatus, page, addPage, error, addError, addFinished} = context;
+
+  useEffect(() => {
+    addFoundImg(null);
+    addStatus('paginated');
+    addPage(1);
+    addFinished(false);
+
+    const API = `https://pixabay.com/api/?q=${searchImg}&page=${page}&key=30987365-3fb5ba0bc2c11b9a856e6023e&image_type=photo&orientation=horizontal&per_page=12`;
+    setTimeout(fetch(API)
+      .then(response => {
+        if (!response.ok) {
+          return Promise.reject(new Error(`картинки на тему "${searchImg}" не знайдено`))
+        }
+        return response.json();
       })
-      const API = `https://pixabay.com/api/?q=${newSearchImg}&page=${this.state.page}&key=30987365-3fb5ba0bc2c11b9a856e6023e&image_type=photo&orientation=horizontal&per_page=12`;
-      setTimeout(fetch(API)
-        .then(response => {
-          if (!response.ok) {
-            return Promise.reject(new Error(`картинки на тему "${newSearchImg}" не знайдено`))
-          }
-          return response.json();
-        })
-        .then((response) => {
-          if (response.hits.length === 0) {
-            this.setState({status: 'rejected'})
-            return Promise.reject(new Error(`картинки на тему "${newSearchImg}" не знайдено`))
-          }
-          this.setState({ foundImg: response.hits, status: 'resolved' })
-        })
+      .then((response) => {
+        if (response.hits.length === 0) {
+          addStatus('rejected');
+          return Promise.reject(new Error(`картинки на тему "${searchImg}" не знайдено`))
+        }
+        addFoundImg(response.hits);
+        addStatus('resolved');
+      })
     
-        .catch(error => this.setState({error: error.message, status: 'rejected'}))
-    , 2000)}
+      .catch(error => {
+        addError(error.message);
+        addStatus('rejected');
+      })
+      , 2000)
 
-    if (prevSearchImg === newSearchImg && prevState.page !== this.state.page) {
-      this.setState({ status: 'paginated'})
-      const API = `https://pixabay.com/api/?q=${newSearchImg}&page=${this.state.page}&key=30987365-3fb5ba0bc2c11b9a856e6023e&image_type=photo&orientation=horizontal&per_page=12`;
-      setTimeout(fetch(API)
-        .then(response => {
-          if (!response.ok) {
-            return Promise.reject(new Error(`Картинки на тему "${newSearchImg}" не знайдено`))
+  }, [searchImg]);
+
+  useEffect(() => {
+    addStatus('paginated');
+
+    const API = `https://pixabay.com/api/?q=${searchImg}&page=${page}&key=30987365-3fb5ba0bc2c11b9a856e6023e&image_type=photo&orientation=horizontal&per_page=12`;
+    setTimeout(fetch(API)
+      .then(response => {
+        if (!response.ok) {
+          return Promise.reject(new Error(`картинки на тему "${searchImg}" не знайдено`))
+        }
+        return response.json();
+      })
+      .then((response) => {
+        if (response.hits.length === 0) {
+          addStatus('rejected');
+          return Promise.reject(new Error(`картинки на тему "${searchImg}" не знайдено`))
+        }
+        
+        if ((response.totalHits - 12) <= foundImg.length) {
+          addFinished(true);
           }
-          return response.json();
-        })
-        .then((response) => {
-          if (response.hits.length === 0) {
-            this.setState({status: 'rejected'})
-            return Promise.reject(new Error(`Картинки на тему "${newSearchImg}" не знайдено`))
-          }
-
-          if ((response.totalHits - 12) <= this.state.foundImg.length) {
-            this.setState({ finished: true })
-          }
-          this.setState(prevState => ({ foundImg: [ ...prevState.foundImg, ...response.hits], status: 'resolved' }))
-          
-        })
+        addFoundImg([ ...foundImg, ...response.hits])
+        addStatus('resolved');
+      })
     
-        .catch(error => this.setState({error: error.message, status: 'rejected'}))
-        , 2000)
-    }
-    
-  }
+      .catch(error => {
+        addError(error.message);
+        addStatus('rejected');
+      })
+      , 2000)
 
-  handleSubmit = (data) => {
-    this.setState({searchImg: data.searchImage})
-  }
-
-  downloadMoreImages = (e) => {
-    e.preventDefault();
-    this.setState(prevState => {
-      return {
-        page: prevState.page + 1,
-      }
-    })
-  }
-
-  render() {
-    
-    const { status, foundImg, error } = this.state;
-
+  }, [page]);
+  
     if (status === 'idle') {
       return (
         <div className={css.App}>
-        <SearchBar onSubmit={this.handleSubmit} />
+        <SearchBar />
         
         <h2>Картинки на яку тему ви шукаєте?</h2>
     </div>)
@@ -104,7 +88,7 @@ export class App extends React.Component {
     if (status === 'paginated') {
       return (
         <div className={css.App}>
-          <SearchBar onSubmit={this.handleSubmit} />
+          <SearchBar />
           
           <Dna
             visible={true}
@@ -121,7 +105,7 @@ export class App extends React.Component {
     if (status === 'rejected') {
       return (
         <div className={css.App}>
-          <SearchBar onSubmit={this.handleSubmit} />
+          <SearchBar />
         
           <h2>Упс, щось пішло не так - {error}</h2>
         </div>
@@ -131,16 +115,15 @@ export class App extends React.Component {
     if (status === 'resolved') {
       return (
           <div className={css.App}>
-            <SearchBar onSubmit={this.handleSubmit} />
+            <SearchBar />
           
-            <ImageGallery foundImg={foundImg} btnFunction={this.downloadMoreImages} disabled={this.state.finished} />
+            <ImageGallery />
         </div>
       )
     }
-  }
+  
   
 };
 
-App.propTypes = {
-  data: PropTypes.string,
-}
+
+
