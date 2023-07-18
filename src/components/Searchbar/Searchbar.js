@@ -5,27 +5,31 @@ import css from "./Searchbar.module.css";
 import { useContextArea } from "components/Context/Context";
 
 export const SearchBar = () => {
+  // state = {
+  //   searchImage: '',
+  // }
+
   const context = useContextArea();
-  const { searchImg, addSearchImg } = context;
-  
-  const [inputText, setInputText] = useState('');
+
+  const [inputImg, setInputImg] = useState('');
 
   const handleInput = (e) => {
-    setInputText(e.target.value);
+    setInputImg(e.target.value);
+    // this.setState({searchImage: e.target.value})
   }
 
   const submitForm = (e) => {
     e.preventDefault();
-    addSearchImg(inputText);
+    context.addSearchImg(inputImg);
     reset();
   }
 
   const reset = () => {
-    setInputText('');
+    setInputImg('');
   }
 
-  return(
-  <header className={css.Searchbar}>
+    return(
+    <header className={css.Searchbar}>
       <form className={css['Searchbar-form']} onSubmit={submitForm}>
         <button type="submit" className={css["SearchForm-button"]}>
           <span className={css["SearchForm-button-label"]}>Search</span>
@@ -38,10 +42,10 @@ export const SearchBar = () => {
           autoFocus
           placeholder="Search images and photos"
           onChange={handleInput}
-          value={inputText}
+          value={inputImg}
         />
       </form>
-    </header>
-  )
-}
+      </header>
+    )
 
+}

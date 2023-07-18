@@ -2,46 +2,52 @@ import React from "react";
 import css from './Modal.module.css';
 import { useEffect } from "react";
 
-import { useContextArea } from './../Context/Context';
 
+export const Modal = ({largeImageURL, onToggle}) => {
 
-
-export const Modal = () => {
-
-  const context = useContextArea();
-  const { largeImageURL, showModal, addShowModal } = context;
-
-  const toggleModal = () => {
-    addShowModal(!showModal);
-  }
+  // state = {
+  //   largeImageURL: null
+  // }
 
   useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown)
 
     return (
       window.removeEventListener('keydown', handleKeyDown)
+
     )
-  }, [])
+  })
+  // componentDidMount() {
+  //   this.setState({ largeImageURL: this.props.largeImageURL });
+  //   window.addEventListener('keydown', this.handleKeyDown)
+  // }
+
+  // componentWillUnmount() {
+  //   window.removeEventListener('keydown', this.handleKeyDown)
+  // }
 
   const handleKeyDown = (event) => {
-    console.log(event.code)
     if (event.code === "Escape") {
-      toggleModal();
+      onToggle()
     }
   }
 
   const handleClickOnOverlay = (event) => {
     if (event.currentTarget === event.target) {
-      toggleModal();
+      onToggle()
     }
   }
 
-  
-  return (
-    <div className={css.Overlay} onClick={handleClickOnOverlay}>
-      <div className={css.Modal}>
-        <img src={largeImageURL} alt="" />
+    return (
+      <div className={css.Overlay} onClick={handleClickOnOverlay}>
+        <div className={css.Modal}>
+          <img src={largeImageURL} alt="" />
+        </div>
       </div>
-    </div>
-  )
+    )
 }
+
+// Modal.propTypes = {
+//   largeImageURL: PropTypes.string,
+//   onToggle: PropTypes.func,
+// }

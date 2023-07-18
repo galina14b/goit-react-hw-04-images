@@ -1,31 +1,38 @@
 import React from "react";
 import css from './ImageGalleryItem.module.css';
+import { useState } from "react";
 
-import { useContextArea } from './../Context/Context';
+
 import { Modal } from "components/Modal/Modal";
 
 
-export const ImageGalleryItem = () => {
+export const ImageGalleryItem = ({webformatURL, largeImageURL}) => {
+  // state = {
+  //   webformatURL: null,
+  //   largeImageURL: null,
+  //   showModal: false,
+  // };
 
-  const context = useContextArea();
+  const [showModal, setShowModal] = useState(false);
 
-  const { showModal, addShowModal, foundImg, largeImageURL, addLargeImageURL } = context;
-  
+  // componentDidMount() {
+  //   this.setState({
+  //     webformatURL: this.props.webformatURL,
+  //     largeImageURL: this.props.largeImageURL
+  //   })
+  // }
+
   const toggleModal = () => {
-    addShowModal(!showModal);
+    setShowModal(!showModal)
   }
   
-  return (
-    foundImg.map(item => {
-      return (
-        <>
-      <li key={item.id} className={css.ImageGalleryItem} onClick={toggleModal}>
-        <img className={css["ImageGalleryItem-image"]} src={item.webformatURL} alt="" />
-      </li>
-      {showModal && <Modal />}
-    </>
+    return (
+      <>
+        <li className={css.ImageGalleryItem} onClick={toggleModal}>
+          <img className={css["ImageGalleryItem-image"]} src={webformatURL} alt="" />
+        </li>
+        {showModal && <Modal largeImageURL={largeImageURL} onToggle={toggleModal} />}
+      </>
     )
-    })
-  )
 }
 
