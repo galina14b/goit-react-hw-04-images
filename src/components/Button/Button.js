@@ -1,5 +1,6 @@
 import React from "react";
 import css from './Button.module.css';
+import PropTypes from 'prop-types';
 
 
 export const Button = ({ func, disabled }) => {
@@ -8,9 +9,9 @@ export const Button = ({ func, disabled }) => {
   )
 };
 
-// Button.propTypes = {
-//   func: PropTypes.func,
-//   disabled: PropTypes.bool,
-// }
+Button.propTypes = {
+  func: PropTypes.func,
+  disabled: PropTypes.bool,
+}
 
 

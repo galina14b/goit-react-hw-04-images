@@ -10,12 +10,13 @@ const useContextArea = () => {
 const ContextArea = ({ children }) => {
   
   const [searchImg, setSearchImg] = useState(null);
-  
+  const [page, setPage] = useState(1);
 
   return (
     <Context.Provider
       value={{
         searchImg: searchImg, addSearchImg: setSearchImg,
+        page: page, addPage: setPage,
     }}
     >
       {children}

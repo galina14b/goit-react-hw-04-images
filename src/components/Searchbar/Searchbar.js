@@ -5,9 +5,6 @@ import css from "./Searchbar.module.css";
 import { useContextArea } from "components/Context/Context";
 
 export const SearchBar = () => {
-  // state = {
-  //   searchImage: '',
-  // }
 
   const context = useContextArea();
 
@@ -15,11 +12,11 @@ export const SearchBar = () => {
 
   const handleInput = (e) => {
     setInputImg(e.target.value);
-    // this.setState({searchImage: e.target.value})
   }
 
   const submitForm = (e) => {
     e.preventDefault();
+    context.addPage(1);
     context.addSearchImg(inputImg);
     reset();
   }

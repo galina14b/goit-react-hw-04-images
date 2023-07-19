@@ -1,13 +1,10 @@
 import React from "react";
 import css from './Modal.module.css';
+import PropTypes from 'prop-types';
 import { useEffect } from "react";
 
 
 export const Modal = ({largeImageURL, onToggle}) => {
-
-  // state = {
-  //   largeImageURL: null
-  // }
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown)
@@ -17,14 +14,6 @@ export const Modal = ({largeImageURL, onToggle}) => {
 
     )
   })
-  // componentDidMount() {
-  //   this.setState({ largeImageURL: this.props.largeImageURL });
-  //   window.addEventListener('keydown', this.handleKeyDown)
-  // }
-
-  // componentWillUnmount() {
-  //   window.removeEventListener('keydown', this.handleKeyDown)
-  // }
 
   const handleKeyDown = (event) => {
     if (event.code === "Escape") {
@@ -47,7 +36,7 @@ export const Modal = ({largeImageURL, onToggle}) => {
     )
 }
 
-// Modal.propTypes = {
-//   largeImageURL: PropTypes.string,
-//   onToggle: PropTypes.func,
-// }
+Modal.propTypes = {
+  largeImageURL: PropTypes.string,
+  onToggle: PropTypes.func,
+}
