@@ -6,7 +6,6 @@ import { Button } from "components/Button/Button";
 
 export const ImageGallery = ({ foundImg, btnFunction, disabled }) => {
 
-    
   return (
         <>
           <ul className={css.ImageGallery}>
