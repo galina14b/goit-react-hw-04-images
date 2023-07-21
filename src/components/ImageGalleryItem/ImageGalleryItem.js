@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Modal } from "components/Modal/Modal";
 
 
-export const ImageGalleryItem = ({webformatURL, largeImageURL}) => {
+export const ImageGalleryItem = ({id, webformatURL, largeImageURL}) => {
 
   const [showModal, setShowModal] = useState(false);
 

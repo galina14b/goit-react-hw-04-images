@@ -18,7 +18,7 @@ export const App = () => {
 
   useEffect(() => {
     const API = `https://pixabay.com/api/?q=${context.searchImg}&page=${context.page}&key=30987365-3fb5ba0bc2c11b9a856e6023e&image_type=photo&orientation=horizontal&per_page=12`;
-    setTimeout(fetch(API)
+    fetch(API)
         
         .then(response => {
           if (!response.ok) {
@@ -36,13 +36,13 @@ export const App = () => {
             return
           }
 
-          if ((response.hits / 12) <= context.page) {
+          if ((response.total / 12) <= context.page) {
             setFinished(true);
           }
           
           if (context.page > 1) {
             setFoundImg(prevState => 
-            [...prevState, response.hits]
+            [...prevState, ...response.hits]
           );
           }
 
@@ -56,7 +56,6 @@ export const App = () => {
           setError(error.message);
           setStatus('rejected');
         })
-    , 2000)
   }, [context.page, context.searchImg])
 
   const downloadMoreImages = (e) => {
