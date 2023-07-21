@@ -7,19 +7,15 @@ import { useEffect } from "react";
 export const Modal = ({largeImageURL, onToggle}) => {
 
   useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown)
 
-    return (
-      window.removeEventListener('keydown', handleKeyDown)
-
-    )
-  })
-
-  const handleKeyDown = (event) => {
+    const handleKeyDown = (event) => {
     if (event.code === "Escape") {
       onToggle()
     }
   }
+    window.addEventListener('keydown', handleKeyDown)
+
+  }, [onToggle])
 
   const handleClickOnOverlay = (event) => {
     if (event.currentTarget === event.target) {

@@ -26,5 +26,4 @@
 
 .Button:disabled {
   opacity: 50%;
-  cursor: none;
 }
