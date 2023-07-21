@@ -16,8 +16,12 @@ export const SearchBar = () => {
 
   const submitForm = (e) => {
     e.preventDefault();
-    context.addPage(1);
-    context.addSearchImg(inputImg.trim());
+    if (inputImg.trim() === '') {
+      return 
+    } else {
+      context.addPage(1);
+      context.addSearchImg(inputImg.trim());
+    }
     reset();
   }
 
